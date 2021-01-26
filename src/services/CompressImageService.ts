@@ -1,10 +1,15 @@
 import path from 'path';
 
+import uploadConfig from '../config/upload';
+
 import IStorageProvider from '../providers/StorageProvider/models/IStorageProvider';
 import ICompressImage from '../providers/CompressImageProvider/models/ICompressImage';
+import IUrlUploadsRepository from '../database/repositories/IUrlUploadsRepository';
 
 class CompressImageService {
   constructor(
+    private urlUploadsRepository: IUrlUploadsRepository,
+
     private storageProvider: IStorageProvider,
 
     private compressImage: ICompressImage,
@@ -15,6 +20,11 @@ class CompressImageService {
     const filePath = path.resolve(tempFolder, `${fileName}`);
 
     const [fileHashName, extension] = path.basename(filePath).split('.');
+
+    const urlUploads = `https://${uploadConfig.config.aws.bucket}.s3.amazonaws.com/${fileName}`;
+
+    const [https, , url] = urlUploads.split('/');
+    const newUrlPath = `${https}//${url}`;
 
     const sizes = [128, 48, 32, 24, 16];
 
@@ -29,9 +39,12 @@ class CompressImageService {
         newFile: fileParams,
       });
 
+      await this.urlUploadsRepository.create(`${newUrlPath}/${newFile}`);
+
       await this.storageProvider.saveFile(newFile);
     });
 
+    await this.urlUploadsRepository.create(urlUploads);
     await this.storageProvider.saveFile(fileName);
 
     return fileName;

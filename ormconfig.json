@@ -1,0 +1,11 @@
+{
+  "name": "mongo",
+  "type": "mongodb",
+  "host": "localhost",
+  "port": 27017,
+  "database": "uploadbusboy",
+  "useUnifiedTopology": true,
+  "entities": [
+    "./src/database/mongodb/typeorm/schemas/*.ts"
+  ]
+}

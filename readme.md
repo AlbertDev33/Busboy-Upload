@@ -9,6 +9,8 @@ Há uma configuração para upload dos arquivos de imagem para o serviço de sto
 - Clone o projeto;
 - Execute o comando yarn ou npm install (esse projeto utilizou yarn);
 
+- > Dentro da pasta tmp crie uma pasta chamada "uploads" para armazenar os arquivos quando estiver em ambiente de desenvolvimento.
+
 - Para verificar se está tudo ok, execute o comando yarn dev:server
 (ou npm run dev:server);
 

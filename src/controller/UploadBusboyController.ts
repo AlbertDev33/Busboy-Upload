@@ -12,8 +12,8 @@ import UrlUploadsRepository from '../database/mongodb/typeorm/repositories/UrlUp
 
 import uploadConfig from '../config/upload';
 
-export default class UploadBusboy {
-  public async create(request: Request, response: Response): Promise<void> {
+export default class UploadBusboyController {
+  public async create(request: Request, response: Response): Promise<Response> {
     const busboy = new Busboy({ headers: request.headers });
 
     busboy.on('file', (fieldName, file, filename) => {
@@ -25,13 +25,8 @@ export default class UploadBusboy {
       const fileHash = crypto.randomBytes(10).toString('hex');
       const fileName = `${fileHash}-${filename}`;
 
-      const tmpFolder = path.resolve(
-        __dirname,
-        '..',
-        '..',
-        'tmp',
-        `${fileName}`,
-      );
+      const tmpFolder = path.resolve(uploadConfig.tmpFolder, fileName);
+
       const newFile = file.pipe(fs.createWriteStream(tmpFolder));
 
       newFile.on('close', () => {
@@ -56,5 +51,7 @@ export default class UploadBusboy {
     });
 
     request.pipe(busboy);
+
+    return response.status(204);
   }
 }

@@ -58,3 +58,42 @@ Para ter acesso à conexão com o banco foi instalado o plugin mongodb.
 
 - Para gerenciar a conexão com o banco de dados foi utilizado o ORM TypeORM. A lib
 instalado foi a typeorm.
+
+## Estrutura de pastas do projeto
+
+```
+📦src
+ ┣ 📂config
+ ┃ ┗ 📜upload.ts
+ ┣ 📂controller
+ ┃ ┗ 📜UploadBusboyController.ts
+ ┣ 📂database
+ ┃ ┣ 📂mongodb
+ ┃ ┃ ┗ 📂typeorm
+ ┃ ┃ ┃ ┣ 📂repositories
+ ┃ ┃ ┃ ┃ ┗ 📜UrlUploadsRepository.ts
+ ┃ ┃ ┃ ┗ 📂schemas
+ ┃ ┃ ┃ ┃ ┗ 📜UrlUploads.ts
+ ┃ ┣ 📂repositories
+ ┃ ┃ ┗ 📜IUrlUploadsRepository.ts
+ ┃ ┗ 📜index.ts
+ ┣ 📂providers
+ ┃ ┣ 📂CompressImageProvider
+ ┃ ┃ ┣ 📂dtos
+ ┃ ┃ ┃ ┗ 📜ICompressImageDTO.ts
+ ┃ ┃ ┣ 📂implementation
+ ┃ ┃ ┃ ┗ 📜SharpProvider.ts
+ ┃ ┃ ┗ 📂models
+ ┃ ┃ ┃ ┗ 📜ICompressImage.ts
+ ┃ ┗ 📂StorageProvider
+ ┃ ┃ ┣ 📂implementations
+ ┃ ┃ ┃ ┣ 📜DiskStorageProvider.ts
+ ┃ ┃ ┃ ┗ 📜S3StorageProvider.ts
+ ┃ ┃ ┗ 📂models
+ ┃ ┃ ┃ ┗ 📜IStorageProvider.ts
+ ┣ 📂routes
+ ┃ ┗ 📜index.ts
+ ┣ 📂services
+ ┃ ┗ 📜CompressImageService.ts
+ ┗ 📜server.ts
+```

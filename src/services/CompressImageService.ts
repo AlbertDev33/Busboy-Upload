@@ -30,7 +30,6 @@ class CompressImageService {
 
     sizes.forEach(async size => {
       const newFile = `${fileHashName}-${size}.${extension}`;
-
       const fileParams = `${tempFolder}/${newFile}`;
 
       await this.compressImage.generateCompressImage({

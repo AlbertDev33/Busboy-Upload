@@ -7,15 +7,15 @@ import uploadConfig from '../../../config/upload';
 
 class DiskStorageProvider implements IStorageProvider {
   public async saveFile(file: string): Promise<string> {
-    const uploadPath = path.resolve(uploadConfig.tmpFolder, file);
-    const destPath = path.resolve(uploadConfig.uploadFolder, file);
+    const tmpFolder = path.resolve(uploadConfig.tmpFolder, file);
+    const uploadFolder = path.resolve(uploadConfig.uploadFolder, file);
 
-    const readStream = createReadStream(uploadPath);
+    const readStream = createReadStream(tmpFolder);
 
-    const localFile = readStream.pipe(fs.createWriteStream(destPath));
+    const localFile = readStream.pipe(fs.createWriteStream(uploadFolder));
 
     localFile.on('close', () => {
-      fs.promises.unlink(uploadPath);
+      fs.promises.unlink(tmpFolder);
     });
 
     return file;

@@ -1,5 +1,7 @@
 import path from 'path';
-import fs, { createReadStream } from 'fs';
+import fs from 'fs';
+import { pipeline } from 'stream';
+import { promisify } from 'util';
 
 import IStorageProvider from '../models/IStorageProvider';
 
@@ -10,15 +12,31 @@ class DiskStorageProvider implements IStorageProvider {
     const tmpFolder = path.resolve(uploadConfig.tmpFolder, file);
     const uploadFolder = path.resolve(uploadConfig.uploadFolder, file);
 
-    const readStream = createReadStream(tmpFolder).pipe(
-      fs.createWriteStream(uploadFolder),
-    );
+    const promisedPipeline = promisify(pipeline);
+
+    const readStream = async () => {
+      await promisedPipeline(
+        fs.createReadStream(tmpFolder),
+        fs.createWriteStream(uploadFolder),
+      );
+      await fs.promises.unlink(tmpFolder);
+    };
+
+    readStream().catch(console.error);
+
+    // const readStream = pipeline(
+    //   fs.createReadStream(tmpFolder),
+    //   fs.createWriteStream(uploadFolder),
+    //   err => {
+    //     console.log(err);
+    //   },
+    // );
 
     // const localFile = readStream.pipe(fs.createWriteStream(uploadFolder));
 
-    readStream.on('close', () => {
-      fs.promises.unlink(tmpFolder);
-    });
+    // readStream.on('close', () => {
+    //   fs.promises.unlink(tmpFolder);
+    // });
 
     return file;
   }

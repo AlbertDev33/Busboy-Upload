@@ -10,11 +10,13 @@ class DiskStorageProvider implements IStorageProvider {
     const tmpFolder = path.resolve(uploadConfig.tmpFolder, file);
     const uploadFolder = path.resolve(uploadConfig.uploadFolder, file);
 
-    const readStream = createReadStream(tmpFolder);
+    const readStream = createReadStream(tmpFolder).pipe(
+      fs.createWriteStream(uploadFolder),
+    );
 
-    const localFile = readStream.pipe(fs.createWriteStream(uploadFolder));
+    // const localFile = readStream.pipe(fs.createWriteStream(uploadFolder));
 
-    localFile.on('close', () => {
+    readStream.on('close', () => {
       fs.promises.unlink(tmpFolder);
     });
 

@@ -46,12 +46,16 @@ export class CompressImageService {
         newFile: fileParams,
       });
 
-      await this.urlUploadsRepository.create(`${newUrlPath}/${newFile}`);
+      if (uploadConfig.driver === 's3') {
+        await this.urlUploadsRepository.create(`${newUrlPath}/${newFile}`);
+      }
 
       await chooseStorageProvider.saveFile(newFile);
     });
 
-    await this.urlUploadsRepository.create(urlUploads);
+    if (uploadConfig.driver === 's3') {
+      await this.urlUploadsRepository.create(urlUploads);
+    }
     await chooseStorageProvider.saveFile(fileName);
 
     return fileName;

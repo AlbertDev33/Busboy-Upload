@@ -3,7 +3,7 @@ import path from 'path';
 import uploadConfig from '../config/upload';
 
 import IStorageProvider from '../providers/StorageProvider/models/IStorageProvider';
-import ICompressImage from '../providers/CompressImageProvider/models/ICompressImage';
+import * as CompressImage from '../providers/CompressImageProvider/implementation/ResizedProvider';
 import IUrlUploadsRepository from '../database/repositories/IUrlUploadsRepository';
 
 class CompressImageService {
@@ -12,7 +12,7 @@ class CompressImageService {
 
     private storageProvider: IStorageProvider,
 
-    private compressImage: ICompressImage,
+    protected compressImage = new CompressImage.ResizedProvider(),
   ) {}
 
   public async execute(fileName: string): Promise<string> {

@@ -6,7 +6,7 @@ import mime from 'mime';
 import IStorageProvider from '../models/IStorageProvider';
 import uploadConfig from '../../../config/upload';
 
-class S3StorageProvider implements IStorageProvider {
+export class StorageCloudProvider implements IStorageProvider {
   constructor(
     private client = new aws.S3({
       region: 'us-east-1',
@@ -40,5 +40,3 @@ class S3StorageProvider implements IStorageProvider {
     return file;
   }
 }
-
-export default S3StorageProvider;

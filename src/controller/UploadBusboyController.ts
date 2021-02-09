@@ -4,10 +4,7 @@ import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
 
-import CompressImageService from '../services/CompressImageService';
-import S3StorageProvider from '../providers/StorageProvider/implementations/S3StorageProvider';
-import DiskStorageProvider from '../providers/StorageProvider/implementations/DiskStorageProvider';
-import UrlUploadsRepository from '../database/mongodb/typeorm/repositories/UrlUploadsRepository';
+import { CompressImageService } from '../services/CompressImageService';
 
 import uploadConfig from '../config/upload';
 
@@ -16,10 +13,6 @@ export default class UploadBusboyController {
     const busboy = new Busboy({ headers: request.headers });
 
     busboy.on('file', (fieldName, file, filename) => {
-      const s3StorageProvider = new S3StorageProvider();
-      const diskStorageProvider = new DiskStorageProvider();
-      const urlUploadsRepository = new UrlUploadsRepository();
-
       const fileHash = crypto.randomBytes(10).toString('hex');
       const fileName = `${fileHash}-${filename}`;
 
@@ -28,15 +21,7 @@ export default class UploadBusboyController {
       const newFile = file.pipe(fs.createWriteStream(tmpFolder));
 
       newFile.on('close', () => {
-        const chooseStorageProvider =
-          uploadConfig.driver === 's3'
-            ? s3StorageProvider
-            : diskStorageProvider;
-
-        const compressImageService = new CompressImageService(
-          urlUploadsRepository,
-          chooseStorageProvider,
-        );
+        const compressImageService = new CompressImageService();
 
         compressImageService.execute(fileName);
       });

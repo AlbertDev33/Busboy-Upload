@@ -2,15 +2,18 @@ import path from 'path';
 
 import uploadConfig from '../config/upload';
 
-import IStorageProvider from '../providers/StorageProvider/models/IStorageProvider';
+import * as StorageCloudProvider from '../providers/StorageProvider/implementations/StorageCloudProvider';
+import * as StorageLocalProvider from '../providers/StorageProvider/implementations/DiskStorageProvider';
 import * as CompressImage from '../providers/CompressImageProvider/implementation/ResizedProvider';
-import IUrlUploadsRepository from '../database/repositories/IUrlUploadsRepository';
+import * as UrlUploadsRepository from '../database/mongodb/typeorm/repositories/UrlUploadsRepository';
 
-class CompressImageService {
+export class CompressImageService {
   constructor(
-    private urlUploadsRepository: IUrlUploadsRepository,
+    protected urlUploadsRepository = new UrlUploadsRepository.UrlUploadsRepository(),
 
-    private storageProvider: IStorageProvider,
+    protected storageLocalProvider = new StorageLocalProvider.DiskStorageProvider(),
+
+    protected storageCloudProvider = new StorageCloudProvider.StorageCloudProvider(),
 
     protected compressImage = new CompressImage.ResizedProvider(),
   ) {}
@@ -28,6 +31,11 @@ class CompressImageService {
 
     const sizes = [128, 48, 32, 24, 16];
 
+    const chooseStorageProvider =
+      uploadConfig.driver === 's3'
+        ? this.storageCloudProvider
+        : this.storageLocalProvider;
+
     sizes.forEach(async size => {
       const newFile = `${fileHashName}-${size}.${extension}`;
       const fileParams = `${tempFolder}/${newFile}`;
@@ -40,14 +48,12 @@ class CompressImageService {
 
       await this.urlUploadsRepository.create(`${newUrlPath}/${newFile}`);
 
-      await this.storageProvider.saveFile(newFile);
+      await chooseStorageProvider.saveFile(newFile);
     });
 
     await this.urlUploadsRepository.create(urlUploads);
-    await this.storageProvider.saveFile(fileName);
+    await chooseStorageProvider.saveFile(fileName);
 
     return fileName;
   }
 }
-
-export default CompressImageService;

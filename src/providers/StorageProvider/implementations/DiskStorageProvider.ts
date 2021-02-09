@@ -7,7 +7,7 @@ import IStorageProvider from '../models/IStorageProvider';
 
 import uploadConfig from '../../../config/upload';
 
-class DiskStorageProvider implements IStorageProvider {
+export class DiskStorageProvider implements IStorageProvider {
   public async saveFile(file: string): Promise<string> {
     const tmpFolder = path.resolve(uploadConfig.tmpFolder, file);
     const uploadFolder = path.resolve(uploadConfig.uploadFolder, file);
@@ -41,5 +41,3 @@ class DiskStorageProvider implements IStorageProvider {
     return file;
   }
 }
-
-export default DiskStorageProvider;

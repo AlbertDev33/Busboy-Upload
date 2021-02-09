@@ -4,7 +4,7 @@ import IUrlUploadsRepository from '../../../repositories/IUrlUploadsRepository';
 
 import UrlUploads from '../schemas/UrlUploads';
 
-class UrlUploadsRepository implements IUrlUploadsRepository {
+export class UrlUploadsRepository implements IUrlUploadsRepository {
   private ormRepository: MongoRepository<UrlUploads>;
 
   constructor() {
@@ -21,5 +21,3 @@ class UrlUploadsRepository implements IUrlUploadsRepository {
     return urlUploads;
   }
 }
-
-export default UrlUploadsRepository;

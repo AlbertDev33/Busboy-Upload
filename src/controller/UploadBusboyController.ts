@@ -1,15 +1,18 @@
-import { Request, Response } from 'express';
 import Busboy from 'busboy';
 import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
 
+import { HttpRequest, IRequest, IResponse } from './model/HttpRequest';
 import { CompressImageService } from '../services/CompressImageService';
 
 import uploadConfig from '../config/upload';
 
-export default class UploadBusboyController {
-  public async create(request: Request, response: Response): Promise<Response> {
+export default class UploadBusboyController extends HttpRequest {
+  public async create(
+    request: IRequest,
+    response: IResponse,
+  ): Promise<IResponse> {
     const busboy = new Busboy({ headers: request.headers });
 
     busboy.on('file', (fieldName, file, filename) => {

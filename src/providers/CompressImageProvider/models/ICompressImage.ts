@@ -1,11 +1,14 @@
-import { OutputInfo } from 'sharp';
-
 import ICompressImageDTO from '../dtos/ICompressImageDTO';
+
+export interface ISharpConfig {
+  size: number;
+  width: number;
+}
 
 export default interface ICompressImage {
   generateCompressImage({
     filePath,
     size,
     newFile,
-  }: ICompressImageDTO): Promise<OutputInfo>;
+  }: ICompressImageDTO): Promise<ISharpConfig>;
 }

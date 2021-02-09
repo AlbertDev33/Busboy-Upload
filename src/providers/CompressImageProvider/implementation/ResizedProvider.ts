@@ -1,27 +1,32 @@
-import sharp, { Sharp, OutputInfo } from 'sharp';
+/* eslint-disable @typescript-eslint/no-empty-interface */
 
+import sharp, { Sharp, OutputInfo } from 'sharp';
 import ICompressImage from '../models/ICompressImage';
 import ICompressImageDTO from '../dtos/ICompressImageDTO';
 
-export type ISharpConfig = OutputInfo;
+export interface IOutputConfig extends OutputInfo {}
 
-export type ISharpResponse = Sharp;
+export interface IResponse extends Sharp {}
 
 export class ResizedProvider implements ICompressImage {
+  private sharpResponse: IResponse;
+
+  private sharpReturn: IOutputConfig;
+
   constructor(private fileResized = sharp) {}
 
   public async generateCompressImage({
     filePath,
     size,
     newFile,
-  }: ICompressImageDTO): Promise<ISharpConfig> {
-    const sharpResponse = this.fileResized(filePath);
+  }: ICompressImageDTO): Promise<IOutputConfig> {
+    this.sharpResponse = this.fileResized(filePath);
 
-    const sharpReturn = await sharpResponse
+    this.sharpReturn = await this.sharpResponse
       .clone()
       .resize({ width: size })
       .toFile(newFile);
 
-    return sharpReturn;
+    return this.sharpReturn;
   }
 }

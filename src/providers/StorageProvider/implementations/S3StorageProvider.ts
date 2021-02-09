@@ -7,13 +7,11 @@ import IStorageProvider from '../models/IStorageProvider';
 import uploadConfig from '../../../config/upload';
 
 class S3StorageProvider implements IStorageProvider {
-  private client: S3;
-
-  constructor() {
-    this.client = new aws.S3({
+  constructor(
+    private client = new aws.S3({
       region: 'us-east-1',
-    });
-  }
+    }),
+  ) {}
 
   public async saveFile(file: string): Promise<string> {
     const uploadPath = path.resolve(uploadConfig.tmpFolder, file);

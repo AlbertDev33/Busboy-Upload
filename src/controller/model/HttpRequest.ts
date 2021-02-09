@@ -10,6 +10,6 @@ export class HttpRequest {
     request: IRequest,
     response: IResponse,
   ): Promise<IRequest | IResponse> {
-    return request;
+    return request && response;
   }
 }

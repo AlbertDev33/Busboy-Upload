@@ -7,7 +7,6 @@ import fs from 'fs';
 import CompressImageService from '../services/CompressImageService';
 import S3StorageProvider from '../providers/StorageProvider/implementations/S3StorageProvider';
 import DiskStorageProvider from '../providers/StorageProvider/implementations/DiskStorageProvider';
-import SharpProvider from '../providers/CompressImageProvider/implementation/SharpProvider';
 import UrlUploadsRepository from '../database/mongodb/typeorm/repositories/UrlUploadsRepository';
 
 import uploadConfig from '../config/upload';
@@ -19,7 +18,6 @@ export default class UploadBusboyController {
     busboy.on('file', (fieldName, file, filename) => {
       const s3StorageProvider = new S3StorageProvider();
       const diskStorageProvider = new DiskStorageProvider();
-      const sharpProvider = new SharpProvider();
       const urlUploadsRepository = new UrlUploadsRepository();
 
       const fileHash = crypto.randomBytes(10).toString('hex');
@@ -38,7 +36,6 @@ export default class UploadBusboyController {
         const compressImageService = new CompressImageService(
           urlUploadsRepository,
           chooseStorageProvider,
-          sharpProvider,
         );
 
         compressImageService.execute(fileName);

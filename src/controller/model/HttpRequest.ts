@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 import { Response, Request } from 'express';
 
 export interface IRequest extends Request {}

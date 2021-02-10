@@ -1,4 +1,4 @@
-import aws, { S3 } from 'aws-sdk';
+import aws from 'aws-sdk';
 import path from 'path';
 import fs, { createReadStream } from 'fs';
 import mime from 'mime';

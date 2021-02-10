@@ -22,7 +22,7 @@ export class DiskStorageProvider implements IStorageProvider {
       await fs.promises.unlink(tmpFolder);
     };
 
-    readStream().catch(console.error);
+    readStream().catch(err => err.message);
 
     // const readStream = pipeline(
     //   fs.createReadStream(tmpFolder),

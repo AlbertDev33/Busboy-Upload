@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 
-import routes from '../../routes';
+import routes from '../routes';
 
 import uploadConfig from '../../config/upload';
 

@@ -1,10 +1,7 @@
-import {
-  IRequest,
-  IResponse,
-} from '@src/shared/ExpressHttpRequest/HttpRequest';
+import { IRequest, IResponse } from '@src/main/ExpressHttpRequest/HttpRequest';
 import { Router } from 'express';
 
-import UploadBusboyController from '../controller/UploadBusboyController';
+import UploadBusboyController from '../../controller/UploadBusboyController';
 
 const routes = Router();
 const uploadBusBoyController = new UploadBusboyController();

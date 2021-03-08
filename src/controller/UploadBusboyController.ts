@@ -3,12 +3,13 @@ import path from 'path';
 import fs from 'fs';
 
 import { IRequest, IResponse } from '../shared/ExpressHttpRequest/HttpRequest';
+import { IControllerModel } from '../shared/ExpressHttpRequest/model/ControllerModel';
 import { CompressImageService } from '../services/CompressImageService';
 import { HashFileProvider } from '../providers/RandomFileProvider/HashFileProvider';
 
 import uploadConfig from '../config/upload';
 
-export default class UploadBusboyController {
+export default class UploadBusboyController implements IControllerModel {
   public async create(
     request: IRequest,
     response: IResponse,

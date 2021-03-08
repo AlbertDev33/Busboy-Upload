@@ -1,14 +1,14 @@
 import Busboy from 'busboy';
 import path from 'path';
-import crypto from 'crypto';
 import fs from 'fs';
 
-import { HttpRequest, IRequest, IResponse } from './model/HttpRequest';
+import { IRequest, IResponse } from '../shared/ExpressHttpRequest/HttpRequest';
 import { CompressImageService } from '../services/CompressImageService';
+import { HashFileProvider } from '../providers/RandomFileProvider/HashFileProvider';
 
 import uploadConfig from '../config/upload';
 
-export default class UploadBusboyController extends HttpRequest {
+export default class UploadBusboyController {
   public async create(
     request: IRequest,
     response: IResponse,
@@ -16,7 +16,9 @@ export default class UploadBusboyController extends HttpRequest {
     const busboy = new Busboy({ headers: request.headers });
 
     busboy.on('file', (fieldName, file, filename) => {
-      const fileHash = crypto.randomBytes(10).toString('hex');
+      const hashFileProvider = new HashFileProvider();
+
+      const fileHash = hashFileProvider.hash(10);
       const fileName = `${fileHash}-${filename}`;
 
       const tmpFolder = path.resolve(uploadConfig.tmpFolder, fileName);

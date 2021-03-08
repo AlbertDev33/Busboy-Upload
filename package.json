@@ -6,7 +6,7 @@
   "author": "AlbertDev33 <alber725@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev:server": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts"
+    "dev:server": "ts-node-dev --transpile-only --ignore-watch node_modules src/main/server.ts"
   },
   "dependencies": {
     "aws-sdk": "2.788.0",

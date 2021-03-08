@@ -6,6 +6,6 @@
   "database": "uploadbusboy",
   "useUnifiedTopology": true,
   "entities": [
-    "./src/database/mongodb/typeorm/schemas/*.ts"
+    "./src/infra/database/mongodb/typeorm/schemas/*.ts"
   ]
 }

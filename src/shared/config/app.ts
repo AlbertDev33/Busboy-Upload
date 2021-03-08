@@ -6,7 +6,7 @@ import routes from '../../routes';
 import uploadConfig from '../../config/upload';
 import setupMiddlewares from './middlewares';
 
-import '../../database';
+import '../../infra/database';
 
 const app = express();
 setupMiddlewares(app);

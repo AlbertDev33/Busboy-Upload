@@ -1,3 +1,4 @@
-import { createConnections } from 'typeorm';
+import { createConnections, Connection } from 'typeorm';
 
-createConnections();
+export const openConnection = async (): Promise<Connection[]> =>
+  createConnections();

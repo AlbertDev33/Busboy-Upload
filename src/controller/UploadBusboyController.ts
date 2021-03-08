@@ -2,14 +2,20 @@ import Busboy from 'busboy';
 import path from 'path';
 import fs from 'fs';
 
-import { IRequest, IResponse } from '../shared/ExpressHttpRequest/HttpRequest';
-import { IControllerModel } from '../shared/ExpressHttpRequest/model/ControllerModel';
-import { CompressImageService } from '../services/CompressImageService';
-import { HashFileProvider } from '../providers/RandomFileProvider/HashFileProvider';
+import { IRequest, IResponse } from '../main/ExpressHttpRequest/HttpRequest';
+import { IControllerModel } from '../main/ExpressHttpRequest/model/ControllerModel';
+import { ICompressImageModel } from '../services/model/CompressImageModel';
+import { IHashFileNameModel } from '../providers/RandomFileProvider/model/HashFileNameModel';
 
 import uploadConfig from '../config/upload';
 
-export default class UploadBusboyController implements IControllerModel {
+export class UploadBusboyController implements IControllerModel {
+  constructor(
+    private compressImageService: ICompressImageModel,
+
+    private hashFileName: IHashFileNameModel,
+  ) {}
+
   public async create(
     request: IRequest,
     response: IResponse,
@@ -17,9 +23,7 @@ export default class UploadBusboyController implements IControllerModel {
     const busboy = new Busboy({ headers: request.headers });
 
     busboy.on('file', (fieldName, file, filename) => {
-      const hashFileProvider = new HashFileProvider();
-
-      const fileHash = hashFileProvider.hash(10);
+      const fileHash = this.hashFileName.hash(10);
       const fileName = `${fileHash}-${filename}`;
 
       const tmpFolder = path.resolve(uploadConfig.tmpFolder, fileName);
@@ -27,9 +31,7 @@ export default class UploadBusboyController implements IControllerModel {
       const newFile = file.pipe(fs.createWriteStream(tmpFolder));
 
       newFile.on('close', () => {
-        const compressImageService = new CompressImageService();
-
-        compressImageService.execute(fileName);
+        this.compressImageService.execute(fileName);
       });
     });
 

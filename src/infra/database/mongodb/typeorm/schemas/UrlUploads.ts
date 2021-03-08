@@ -15,6 +15,9 @@ class UrlUploads {
   @Column()
   url: string;
 
+  @Column()
+  fileName: string;
+
   @CreateDateColumn()
   created_at: Date;
 

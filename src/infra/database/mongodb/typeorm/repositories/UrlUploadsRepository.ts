@@ -11,9 +11,10 @@ export class UrlUploadsRepository implements IUrlUploadsRepository {
     this.ormRepository = getMongoRepository(UrlUploads, 'mongo');
   }
 
-  public async create(url: string): Promise<UrlUploads> {
+  public async create(url: string, fileName: string): Promise<UrlUploads> {
     const urlUploads = this.ormRepository.create({
       url,
+      fileName,
     });
 
     await this.ormRepository.save(urlUploads);

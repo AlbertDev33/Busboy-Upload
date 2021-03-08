@@ -3,15 +3,13 @@
     "target": "es5",
     "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "strict": true,
     "strictPropertyInitialization": false,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "allowJs": true,
     "paths": {
-      "@modules/*": ["modules/*"],
-      "@config/*": ["config/*"],
-      "@shared/*": ["shared/*"]
+      "@src/*": ["./src/*"],
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -19,5 +17,15 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "include": [
+    "./test/**/*.ts",
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "tests",
+    "lib",
+    "dist"
+  ]
 }

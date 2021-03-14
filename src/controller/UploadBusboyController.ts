@@ -1,11 +1,11 @@
 import Busboy from 'busboy';
-import path from 'path';
 import fs from 'fs';
 
 import { IRequest, IResponse } from '../main/ExpressHttpRequest/HttpRequest';
 import { IControllerModel } from '../main/ExpressHttpRequest/model/ControllerModel';
 import { ICompressImageModel } from '../services/model/CompressImageModel';
 import { IHashFileNameModel } from '../providers/RandomFileProvider/model/HashFileNameModel';
+import { IFilePathProvider } from '../providers/FilePathProvider/model/IFilePathProvider';
 
 import uploadConfig from '../config/upload';
 
@@ -14,6 +14,8 @@ export class UploadBusboyController implements IControllerModel {
     private compressImageService: ICompressImageModel,
 
     private hashFileName: IHashFileNameModel,
+
+    private filePathProvider: IFilePathProvider,
   ) {}
 
   public async create(
@@ -26,7 +28,10 @@ export class UploadBusboyController implements IControllerModel {
       const fileHash = this.hashFileName.hash(10);
       const fileName = `${fileHash}-${filename}`;
 
-      const tmpFolder = path.resolve(uploadConfig.tmpFolder, fileName);
+      const tmpFolder = this.filePathProvider.resolve(
+        uploadConfig.tmpFolder,
+        fileName,
+      );
 
       const newFile = file.pipe(fs.createWriteStream(tmpFolder));
 

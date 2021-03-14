@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
-
 import sharp, { Sharp, OutputInfo } from 'sharp';
-import ICompressImage from '../models/ICompressImage';
+import { ICompressImageProvider } from '../models/ICompressImageProvider';
 import ICompressImageDTO from '../dtos/ICompressImageDTO';
 
 export interface IOutputConfig extends OutputInfo {}
 
 export interface IResponse extends Sharp {}
 
-export class ResizedProvider implements ICompressImage {
+export class ResizedProvider implements ICompressImageProvider {
   private sharpResponse: IResponse;
 
   private sharpReturn: IOutputConfig;

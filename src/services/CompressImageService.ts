@@ -1,28 +1,38 @@
-import path from 'path';
-
 import uploadConfig from '../config/upload';
 
-import * as StorageCloudProvider from '../providers/StorageProvider/implementations/StorageCloudProvider';
-import * as StorageLocalProvider from '../providers/StorageProvider/implementations/DiskStorageProvider';
-import * as CompressImage from '../providers/CompressImageProvider/implementation/ResizedProvider';
-import * as UrlUploadsRepository from '../infra/database/mongodb/typeorm/repositories/UrlUploadsRepository';
+import { ILocalStorageProvider } from '../providers/StorageProvider/models/ILocalStorageProvider';
+import { ICloudStorageProvider } from '../providers/StorageProvider/models/ICloudStorageProvider';
+import { ICompressImageProvider } from '../providers/CompressImageProvider/models/ICompressImageProvider';
+import { IUrlUploadsRepository } from '../infra/database/repositories/IUrlUploadsRepository';
+import { IFilePathProvider } from '../providers/FilePathProvider/model/IFilePathProvider';
 
-export class CompressImageService {
+import { ICompressImageModel } from './model/CompressImageModel';
+
+export class CompressImageService implements ICompressImageModel {
   constructor(
-    protected urlUploadsRepository = new UrlUploadsRepository.UrlUploadsRepository(),
+    private urlUploadsRepository: IUrlUploadsRepository,
 
-    protected storageLocalProvider = new StorageLocalProvider.DiskStorageProvider(),
+    private localStorageProvider: ILocalStorageProvider,
 
-    protected storageCloudProvider = new StorageCloudProvider.StorageCloudProvider(),
+    private cloudStorageProvider: ICloudStorageProvider,
 
-    protected compressImage = new CompressImage.ResizedProvider(),
+    private compressImageProvider: ICompressImageProvider,
+
+    private filePathProvider: IFilePathProvider,
   ) {}
 
   public async execute(fileName: string): Promise<string> {
-    const tempFolder = path.resolve(__dirname, '..', '..', 'tmp');
-    const filePath = path.resolve(tempFolder, `${fileName}`);
+    const tempFolder = this.filePathProvider.resolve(
+      __dirname,
+      '..',
+      '..',
+      'tmp',
+    );
+    const filePath = this.filePathProvider.resolve(tempFolder, `${fileName}`);
 
-    const [fileHashName, extension] = path.basename(filePath).split('.');
+    const [fileHashName, extension] = this.filePathProvider
+      .basename(filePath)
+      .split('.');
 
     const urlUploads = `https://${uploadConfig.config.aws.bucket}.s3.amazonaws.com/${fileName}`;
 
@@ -33,14 +43,14 @@ export class CompressImageService {
 
     const chooseStorageProvider =
       uploadConfig.driver === 's3'
-        ? this.storageCloudProvider
-        : this.storageLocalProvider;
+        ? this.cloudStorageProvider
+        : this.localStorageProvider;
 
     fileSizes.forEach(async fileSize => {
       const newFile = `${fileHashName}-${fileSize}.${extension}`;
       const fileParams = `${tempFolder}/${newFile}`;
 
-      await this.compressImage.generateCompressImage({
+      await this.compressImageProvider.generateCompressImage({
         filePath,
         size: fileSize,
         newFile: fileParams,

@@ -1,6 +1,6 @@
 import { MongoRepository, getMongoRepository } from 'typeorm';
 
-import IUrlUploadsRepository from '../../../repositories/IUrlUploadsRepository';
+import { IUrlUploadsRepository } from '../../../repositories/IUrlUploadsRepository';
 
 import UrlUploads from '../schemas/UrlUploads';
 

@@ -41,7 +41,7 @@ export class UploadBusboyController implements IControllerModel {
     });
 
     busboy.on('finish', () => {
-      response.writeHead(200, { Connection: 'close' });
+      response.writeHead(201, { Connection: 'close' });
       response.end('Upload realizado com sucesso!');
     });
 

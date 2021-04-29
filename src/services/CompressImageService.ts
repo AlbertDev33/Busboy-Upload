@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import uploadConfig from '../config/upload';
 
 import { ILocalStorageProvider } from '../providers/StorageProvider/models/ILocalStorageProvider';
@@ -46,7 +47,7 @@ export class CompressImageService implements ICompressImageModel {
         ? this.cloudStorageProvider
         : this.localStorageProvider;
 
-    fileSizes.forEach(async fileSize => {
+    for await (const fileSize of fileSizes) {
       const newFile = `${fileHashName}-${fileSize}.${extension}`;
       const fileParams = `${tempFolder}/${newFile}`;
 
@@ -64,7 +65,27 @@ export class CompressImageService implements ICompressImageModel {
       }
 
       await chooseStorageProvider.saveFile(newFile);
-    });
+    }
+
+    // fileSizes.forEach(async fileSize => {
+    //   const newFile = `${fileHashName}-${fileSize}.${extension}`;
+    //   const fileParams = `${tempFolder}/${newFile}`;
+
+    //   await this.compressImageProvider.generateCompressImage({
+    //     filePath,
+    //     size: fileSize,
+    //     newFile: fileParams,
+    //   });
+
+    //   if (uploadConfig.driver === 's3') {
+    //     await this.urlUploadsRepository.create(
+    //       `${newUrlPath}/${newFile}`,
+    //       newFile,
+    //     );
+    //   }
+
+    //   await chooseStorageProvider.saveFile(newFile);
+    // });
 
     if (uploadConfig.driver === 's3') {
       await this.urlUploadsRepository.create(urlUploads, fileHashName);

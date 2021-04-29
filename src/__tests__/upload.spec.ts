@@ -15,6 +15,10 @@ describe('Files Upload', () => {
     await disconnect();
   });
 
+  // test('Should be able to hash fileName', async () => {
+  //   const response = await request(app).post('/files').send('any_file_name');
+  // });
+
   test('Should be able create a new url and fileName in database', async () => {
     const response = await request(app).post('/files').send('any_file_name');
 
